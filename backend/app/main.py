@@ -8,7 +8,7 @@ import logging
 
 from fastapi import FastAPI
 
-from app.api import health, memes, sessions
+from app.api import attempts, health, memes, sessions
 
 # Show our own log messages (ffmpeg problems, broken memes) in the docker logs.
 logging.basicConfig(level=logging.INFO)
@@ -23,3 +23,4 @@ app = FastAPI(title="Meme Mimic", version="0.1.0")
 app.include_router(health.router)
 app.include_router(memes.router)
 app.include_router(sessions.router)
+app.include_router(attempts.router)

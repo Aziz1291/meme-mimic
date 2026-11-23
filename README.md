@@ -40,3 +40,8 @@ docker compose run --rm api pytest -q
 ## Meme audio
 
 The meme mp3 files are not in this repo (copyright). `backend/data/memes/catalog.json` lists them; put the matching files in `backend/data/memes/` (the clips come from myinstants.com). Tests don't need them: they build fake audio.
+
+## Known limits
+
+- The score measures how similar the **sound** is (timbre, melody, loudness, rhythm), not how funny or well acted the imitation is.
+- Sessions are files on disk. Writes are atomic (temp file + rename), but two attempts sent at the exact same moment for the same session could still lose one of them. Fine for a single-player game.

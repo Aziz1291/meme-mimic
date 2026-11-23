@@ -4,7 +4,6 @@ A fake catalog (2 memes made of beeps) is built in a temporary folder for each t
 """
 
 import io
-import json
 
 import numpy as np
 import pytest
@@ -19,24 +18,9 @@ client = TestClient(app)
 
 
 @pytest.fixture(autouse=True)
-def fake_catalog(tmp_path, monkeypatch):
-    memes_dir = tmp_path / "memes"
-    memes_dir.mkdir()
-    # 44 100 Hz stereo, like a file exported from Audacity.
-    tone = make_tone(3.0, sample_rate=44100)
-    soundfile.write(memes_dir / "beep.wav", np.column_stack([tone, tone]), 44100)
-    catalog = [
-        {"id": "meme_01", "title": "Beep", "file": "beep.wav", "sections": [
-            {"start_s": 0.0, "end_s": 1.5, "subtitle": "first"},
-            {"start_s": 1.5, "end_s": 3.0, "subtitle": "second"},
-        ]},
-        {"id": "meme_02", "title": "Broken", "file": "beep.wav", "sections": [
-            {"start_s": 0.0, "end_s": 9.0},  # longer than the audio: a catalog mistake
-        ]},
-    ]
-    (memes_dir / "catalog.json").write_text(json.dumps(catalog))
-    monkeypatch.setattr(config, "MEMES_DIR", memes_dir)
-    monkeypatch.setattr(config, "CATALOG_PATH", memes_dir / "catalog.json")
+def use_fake_catalog(fake_catalog):
+    # fake_catalog lives in conftest.py; autouse applies it to every test of this file.
+    pass
 
 
 def upload(samples, name="clip.wav"):

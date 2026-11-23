@@ -3,7 +3,10 @@
 Every test gets its own empty storage folder, so tests never touch your real sessions.
 """
 
+import json
+
 import numpy as np
+import soundfile
 import pytest
 
 from app import config
@@ -38,3 +41,28 @@ def make_noise(seconds, sample_rate=16000):
     # A fixed seed: the "random" noise is the same every run, so tests are repeatable.
     generator = np.random.default_rng(seed=0)
     return 0.3 * generator.standard_normal(int(seconds * sample_rate))
+
+
+@pytest.fixture
+def fake_catalog(tmp_path, monkeypatch):
+    """A catalog with 2 memes made of beeps, in a temporary folder.
+
+    meme_01: a 3 s chirp (a beep that goes up), 44 100 Hz stereo like an Audacity export.
+    meme_02: a section longer than the audio, to test a broken catalog.
+    """
+    memes_dir = tmp_path / "memes"
+    memes_dir.mkdir()
+    chirp = make_chirp(3.0, 200, 400, sample_rate=44100)
+    soundfile.write(memes_dir / "beep.wav", np.column_stack([chirp, chirp]), 44100)
+    catalog = [
+        {"id": "meme_01", "title": "Beep", "file": "beep.wav", "sections": [
+            {"start_s": 0.0, "end_s": 1.5, "subtitle": "first"},
+            {"start_s": 1.5, "end_s": 3.0, "subtitle": "second"},
+        ]},
+        {"id": "meme_02", "title": "Broken", "file": "beep.wav", "sections": [
+            {"start_s": 0.0, "end_s": 9.0},  # longer than the audio: a catalog mistake
+        ]},
+    ]
+    (memes_dir / "catalog.json").write_text(json.dumps(catalog))
+    monkeypatch.setattr(config, "MEMES_DIR", memes_dir)
+    monkeypatch.setattr(config, "CATALOG_PATH", memes_dir / "catalog.json")
