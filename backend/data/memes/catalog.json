@@ -1,1 +1,33 @@
-[]
+[
+  {
+    "id": "emotional_damage",
+    "title": "Emotional Damage",
+    "file": "emotional_damage.mp3",
+    "sections": [
+      {"start_s": 0.2, "end_s": 1.68, "subtitle": "Emotional..."},
+      {"start_s": 1.68, "end_s": 2.59, "subtitle": "DAMAGE!"}
+    ]
+  },
+  {
+    "id": "why_are_you_running",
+    "title": "Why are you running?",
+    "file": "why_are_you_running.mp3",
+    "sections": [
+      {"start_s": 0.03, "end_s": 1.21, "subtitle": "Why are you running?"},
+      {"start_s": 1.34, "end_s": 2.82, "subtitle": "Why are you running?"},
+      {"start_s": 2.85, "end_s": 4.12, "subtitle": null},
+      {"start_s": 4.12, "end_s": 5.58, "subtitle": null},
+      {"start_s": 5.72, "end_s": 6.6, "subtitle": null}
+    ]
+  },
+  {
+    "id": "phone_ringing",
+    "title": "Yo phone is ringing",
+    "file": "phone_ringing.mp3",
+    "sections": [
+      {"start_s": 0.1, "end_s": 1.66, "subtitle": "Yo phone is ringing..."},
+      {"start_s": 1.66, "end_s": 3.17, "subtitle": null},
+      {"start_s": 3.55, "end_s": 4.77, "subtitle": "Your phone was ringing"}
+    ]
+  }
+]

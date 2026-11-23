@@ -9,3 +9,6 @@ backend/eval/dataset/
 docs/
 ssh_key
 ssh_key.pub
+# meme audio is copyrighted: kept locally, not on GitHub
+backend/data/memes/*.mp3
+backend/data/memes/*.wav

@@ -36,3 +36,7 @@ docker compose run --rm api pytest -q
 
 - `INFERENCE_MODE=mock` (default): works offline with fixed answers.
 - `INFERENCE_MODE=real`: calls Groq. Needs `GROQ_API_KEY` in `backend/.env`.
+
+## Meme audio
+
+The meme mp3 files are not in this repo (copyright). `backend/data/memes/catalog.json` lists them; put the matching files in `backend/data/memes/` (the clips come from myinstants.com). Tests don't need them: they build fake audio.
