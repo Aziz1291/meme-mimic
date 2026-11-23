@@ -7,3 +7,5 @@ dist/
 backend/storage/
 backend/eval/dataset/
 docs/
+ssh_key
+ssh_key.pub
