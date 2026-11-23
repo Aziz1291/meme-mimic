@@ -1,0 +1,13 @@
+/* Global styles. Kept tiny on purpose: working beats pretty until Sprint 6. */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #fafafa;
+  color: #222;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
