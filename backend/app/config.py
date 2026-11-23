@@ -47,3 +47,40 @@ MIN_SECTION_SECONDS = 0.5
 MAX_SECTION_SECONDS = 2.0
 TARGET_SECTION_SECONDS = 1.5
 MAX_SECTIONS = 10
+
+# --- Attempts (the player's imitations) ---
+ATTEMPT_MAX_BYTES = 2 * 1024 * 1024  # 2 MB
+ATTEMPT_MAX_SECONDS = 10.0
+# "signal" = the real scorer; "mock" = a fixed score, for fast API tests.
+SCORER = os.getenv("SCORER", "signal").lower()
+MIX_GAP_SECONDS = 0.2  # silence between sections in the final mix
+
+# --- Features (features.py). Same settings for the original and the attempt. ---
+HOP_LENGTH = 320  # one analysis frame every 20 ms at 16 000 Hz
+N_MFCC = 13
+CURVE_POINTS = 50  # pitch and energy curves are resampled to 50 points
+TRIM_TOP_DB = 30
+PITCH_MIN_HZ = 65
+PITCH_MAX_HZ = 1000
+MIN_VOICED_RATIO = 0.2  # below this, the sound has no melody to compare
+
+# --- Refusal rules (rules.py) ---
+# Starting guesses. Sprint 4 justifies them with measurements.
+SILENT_DB = -45.0  # loudest frame quieter than this → silent
+MIN_ATTEMPT_SECONDS = 0.3  # after trimming silence
+CLIP_LEVEL = 0.99  # a sample this close to the max is distorted
+MAX_CLIPPED_SHARE = 0.01  # more than 1% distorted samples → too loud
+MIN_DYNAMIC_RANGE_DB = 10.0  # loud parts vs quiet parts; less → too noisy
+MAX_LENGTH_FACTOR = 3.0  # attempt longer than 3 × the section + 1 s → too long
+MAX_LENGTH_EXTRA_SECONDS = 1.0
+
+# --- Scoring (scoring.py) ---
+WEIGHTS = {"timbre": 0.40, "melody": 0.25, "loudness": 0.20, "rhythm": 0.15}
+# Timbre calibration: typical DTW cost of a good imitation vs of two unrelated sounds.
+# Measured on the catalog memes (see the Sprint 2 notes). Sprint 4 re-measures them.
+TIMBRE_COST_GOOD = 0.15
+TIMBRE_COST_BAD = 0.60
+MELODY_MAX_DIFF_SEMITONES = 6.0  # 6 semitones apart on average → melody score 0
+LOUDNESS_MAX_DIFF = 0.5
+T_GREAT = 0.75
+T_GOOD = 0.50

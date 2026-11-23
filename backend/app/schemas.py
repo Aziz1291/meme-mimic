@@ -4,6 +4,7 @@ FastAPI uses these Pydantic models to check requests (422 if bad) and to build t
 No provider names here (no Groq, no librosa): the contract doesn't depend on how things are computed.
 """
 
+from enum import Enum
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -70,3 +71,70 @@ class SessionResponse(BaseModel):
     source: Literal["catalog", "upload"]
     meme_title: str
     sections: list[Section]
+
+
+# --- Attempts and results ---
+
+class Verdict(str, Enum):
+    """A closed list: the frontend and the tests can rely on exactly these 3 values."""
+
+    great = "great"
+    good = "good"
+    try_again = "try_again"
+
+
+class RefusalReason(str, Enum):
+    """Why a recording can't be scored. A closed list, not free text."""
+
+    silent = "silent"
+    too_short = "too_short"
+    too_loud = "too_loud"
+    too_noisy = "too_noisy"
+    too_long = "too_long"
+
+
+class SubScores(BaseModel):
+    """The 4 parts of the score, each between 0 and 1."""
+
+    timbre: float = Field(ge=0, le=1)
+    # None means "this sound has no melody to compare" (a scream, a noise). It's not 0.
+    melody: float | None = Field(default=None, ge=0, le=1)
+    loudness: float = Field(ge=0, le=1)
+    rhythm: float = Field(ge=0, le=1)
+
+
+class AttemptResponse(BaseModel):
+    """The answer to one imitation: always the same shape, scored or refused."""
+
+    status: Literal["scored", "refused"]
+    score: float | None = Field(default=None, ge=0, le=1)
+    verdict: Verdict | None = None
+    refusal_reason: RefusalReason | None = None
+    message: str  # a sentence for the player
+    sub_scores: SubScores | None = None
+    scorer: str
+    latency_ms: float = Field(ge=0)
+
+
+class AttemptRecord(BaseModel):
+    """One attempt as saved in attempts.json (not sent to the player as is)."""
+
+    section_index: int = Field(ge=0)
+    attempt_number: int = Field(ge=1)
+    file_name: str
+    result: AttemptResponse
+
+
+class SectionResult(BaseModel):
+    index: int = Field(ge=0)
+    best_score: float = Field(ge=0, le=1)
+    verdict: Verdict
+    attempt_count: int = Field(ge=1)
+
+
+class SessionResult(BaseModel):
+    """The end of the game: total % and the best attempt of each section."""
+
+    session_id: str
+    total_percent: int = Field(ge=0, le=100)
+    sections: list[SectionResult]

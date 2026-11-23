@@ -3,7 +3,13 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas import CatalogMeme, CatalogSection, StartSessionRequest
+from app.schemas import (
+    AttemptResponse,
+    CatalogMeme,
+    CatalogSection,
+    StartSessionRequest,
+    SubScores,
+)
 
 
 def test_empty_meme_id_is_refused():
@@ -34,3 +40,15 @@ def test_valid_catalog_meme():
         sections=[{"start_s": 0, "end_s": 1.2, "subtitle": "hello"}],
     )
     assert meme.sections[0].subtitle == "hello"
+
+
+def test_score_above_one_is_refused():
+    with pytest.raises(ValidationError):
+        SubScores(timbre=1.3, melody=None, loudness=0.5, rhythm=0.5)
+
+
+def test_unknown_refusal_reason_is_refused():
+    with pytest.raises(ValidationError):
+        AttemptResponse(
+            status="refused", refusal_reason="i_dont_like_it", message="x", scorer="mock", latency_ms=1
+        )
