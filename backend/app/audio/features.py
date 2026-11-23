@@ -31,6 +31,7 @@ def mfcc(samples, sample_rate):
     matrix = librosa.feature.mfcc(
         y=samples, sr=sample_rate, n_mfcc=config.N_MFCC, hop_length=config.HOP_LENGTH
     )
+    matrix = matrix[config.MFCC_FIRST_COEFFICIENT:]
     # Normalizing removes differences due to the microphone and the voice's overall color:
     # we compare the shape of the sound, not its absolute values.
     means = matrix.mean(axis=1, keepdims=True)

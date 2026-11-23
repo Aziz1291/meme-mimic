@@ -58,6 +58,10 @@ MIX_GAP_SECONDS = 0.2  # silence between sections in the final mix
 # --- Features (features.py). Same settings for the original and the attempt. ---
 HOP_LENGTH = 320  # one analysis frame every 20 ms at 16 000 Hz
 N_MFCC = 13
+# 0 = keep all 13 coefficients (the plan). 1 = drop c0 (overall loudness).
+# Sprint 2 found the timbre score is very sensitive to the voice's pitch: a candidate for
+# the Sprint 4 "change one variable" comparison.
+MFCC_FIRST_COEFFICIENT = 0
 CURVE_POINTS = 50  # pitch and energy curves are resampled to 50 points
 TRIM_TOP_DB = 30
 PITCH_MIN_HZ = 65
@@ -77,9 +81,11 @@ MAX_LENGTH_EXTRA_SECONDS = 1.0
 # --- Scoring (scoring.py) ---
 WEIGHTS = {"timbre": 0.40, "melody": 0.25, "loudness": 0.20, "rhythm": 0.15}
 # Timbre calibration: typical DTW cost of a good imitation vs of two unrelated sounds.
-# Measured on the catalog memes (see the Sprint 2 notes). Sprint 4 re-measures them.
-TIMBRE_COST_GOOD = 0.15
-TIMBRE_COST_BAD = 0.60
+# Measured on the catalog memes (see the Sprint 2 notes). Sprint 4 re-measures them
+# with real imitations. BAD = median cost between sections of different memes (0.76).
+# GOOD = a guess between a slowed-down copy (0.07) and a copy 3 semitones higher (0.49).
+TIMBRE_COST_GOOD = 0.30
+TIMBRE_COST_BAD = 0.76
 MELODY_MAX_DIFF_SEMITONES = 6.0  # 6 semitones apart on average → melody score 0
 LOUDNESS_MAX_DIFF = 0.5
 T_GREAT = 0.75
