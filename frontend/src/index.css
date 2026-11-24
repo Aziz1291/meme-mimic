@@ -1,13 +1,102 @@
-/* Global styles. Kept tiny on purpose: working beats pretty until Sprint 6. */
+/* Global styles. Plain CSS, big buttons: working beats pretty until Sprint 6. */
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: #fafafa;
+  background: #f6f5fb;
   color: #222;
 }
 
 main {
   max-width: 640px;
   margin: 0 auto;
-  padding: 32px 16px;
+  padding: 24px 16px 48px;
 }
+
+.top-bar {
+  background: #2d2a4a;
+  padding: 12px 16px;
+}
+
+.logo {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+h1 { margin: 8px 0; }
+h2 { margin: 0 0 8px; font-size: 20px; }
+
+.hint { color: #777; font-size: 14px; }
+.error { color: #c0392b; font-weight: bold; }
+.busy { color: #6c5ce7; font-weight: bold; }
+
+/* Buttons (and links that look like buttons) */
+button, .button {
+  display: inline-block;
+  padding: 12px 20px;
+  font-size: 17px;
+  border: none;
+  border-radius: 10px;
+  background: #6c5ce7;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+button.secondary { background: #dfe6e9; color: #222; }
+button.record { background: #e17055; }
+button.recording { background: #d63031; }
+/* Last, so it wins over the colors above: a disabled button always looks grey. */
+button:disabled { background: #bbb; color: white; cursor: not-allowed; }
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.meme-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.meme-list .card { margin: 0; }
+
+/* Play page */
+.subtitle {
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  margin: 16px 0;
+}
+.waveform { margin: 8px 0; }
+.actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+.countdown { font-size: 40px; font-weight: bold; color: #e17055; margin: 0 12px; }
+
+/* Score card */
+.score.great { border-left: 6px solid #00b894; }
+.score.good { border-left: 6px solid #fdcb6e; }
+.score.try_again, .score.refused { border-left: 6px solid #e17055; }
+.sub-score {
+  display: grid;
+  grid-template-columns: 110px 1fr 48px;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+  font-size: 14px;
+}
+.bar { background: #eee; border-radius: 6px; height: 10px; overflow: hidden; }
+.bar-fill { background: #6c5ce7; height: 100%; }
+
+/* Results page */
+.total { font-size: 72px; text-align: center; color: #6c5ce7; }
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.result-row:last-child { border-bottom: none; }
+audio { width: 100%; }
