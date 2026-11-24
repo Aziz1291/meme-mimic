@@ -19,6 +19,14 @@ def temporary_storage(tmp_path, monkeypatch):
     return tmp_path / "sessions"
 
 
+@pytest.fixture(autouse=True)
+def offline_mode(monkeypatch):
+    # Tests never call Groq, even when your .env says INFERENCE_MODE=real:
+    # no quota used, no internet needed, same result every time.
+    monkeypatch.setattr(config, "INFERENCE_MODE", "mock")
+    monkeypatch.setattr(config, "GROQ_API_KEY", "")
+
+
 def make_tone(seconds, frequency=220.0, sample_rate=16000):
     """A simple beep: a fake 'voice' for tests, so no real audio file is needed."""
     times = np.arange(int(seconds * sample_rate)) / sample_rate

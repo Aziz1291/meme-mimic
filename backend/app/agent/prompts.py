@@ -23,5 +23,10 @@ Rules:
 - Other players' games or any other session: refuse, you can only see this game.
 - Answer in the player's language, in 3 sentences at most, with the exact numbers from the tools."""
 
+# Sent to the model when its tool call was refused (an invented or misspelled tool name).
+INVALID_TOOL_CALL_NOTE = (
+    "Your last tool call was invalid. Use only these exact tool names: get_session_summary, "
+    "get_section_scores, compare_attempts, get_tip, propose_retry. Or answer without a tool.")
+
 # When max_tours is reached without a final answer.
 FALLBACK_REPLY = "Sorry, I got lost looking that up. Can you ask in a simpler way?"

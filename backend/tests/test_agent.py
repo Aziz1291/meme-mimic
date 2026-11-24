@@ -130,6 +130,14 @@ def test_invented_tool_gets_an_error_and_the_loop_continues():
     assert json.loads(llm.calls[1][-1]["content"]) == {"error": "unknown tool"}
 
 
+def test_invalid_tool_call_is_reported_to_the_model_then_it_recovers():
+    llm = FakeLLM([LLMReply(invalid_tool_call=True), LLMReply(text="Your total is 57%.")])
+    response = run_agent("total?", [], make_game(), llm)
+    assert response.reply == "Your total is 57%." and response.turns == 2
+    note = llm.calls[1][-1]
+    assert note["role"] == "system" and "compare_attempts" in note["content"]
+
+
 def test_propose_retry_becomes_a_pending_action_counted_from_0():
     llm = FakeLLM([call("propose_retry", {"section_number": 2}), LLMReply(text="OK")])
     response = run_agent("let me redo piece 2", [], make_game(), llm)

@@ -27,6 +27,9 @@ class ToolCall:
 class LLMReply:
     text: str = ""
     tool_calls: list[ToolCall] = field(default_factory=list)
+    # True when the model wrote a broken tool call (e.g. "compare Attempts") that Groq refused.
+    # That's the model's typo, not an outage: the loop tells the model and lets it try again.
+    invalid_tool_call: bool = False
 
 
 class LLMUnavailable(Exception):
@@ -56,6 +59,14 @@ class GroqLLM:
             except groq.RateLimitError:
                 logger.warning("Groq rate limit (attempt %d)", attempt + 1)
                 time.sleep(config.LLM_RETRY_WAIT_SECONDS * (attempt + 1))
+            except groq.BadRequestError as error:
+                # Groq checks tool names itself and answers 400 "tool_use_failed" when the
+                # model invents one. Found in the benchmark: qwen wrote "compare Attempts".
+                if "tool_use_failed" in str(getattr(error, "body", "")):
+                    logger.warning("the model wrote an invalid tool call")
+                    return None
+                logger.error("Groq call failed: %s", type(error).__name__)
+                raise LLMUnavailable() from error
             except groq.GroqError as error:
                 # Bad key, network down, model not available...: details go to the log only.
                 logger.error("Groq call failed: %s", type(error).__name__)
@@ -63,7 +74,10 @@ class GroqLLM:
         raise LLMUnavailable()
 
     def chat(self, messages: list[dict], tools: list[dict]) -> LLMReply:
-        message = self.call_api(messages, tools).choices[0].message
+        response = self.call_api(messages, tools)
+        if response is None:
+            return LLMReply(invalid_tool_call=True)
+        message = response.choices[0].message
         calls = []
         for call in message.tool_calls or []:
             calls.append(ToolCall(id=call.id, name=call.function.name,

@@ -9,7 +9,7 @@ import json
 
 from app import config
 from app.agent.executor import execute_tool
-from app.agent.prompts import FALLBACK_REPLY, SYSTEM_PROMPT
+from app.agent.prompts import FALLBACK_REPLY, INVALID_TOOL_CALL_NOTE, SYSTEM_PROMPT
 from app.agent.tools import tool_schemas
 from app.schemas import ChatTurn, CoachResponse, PendingAction
 
@@ -42,6 +42,10 @@ def run_agent(message, history, game, llm, degraded=False, max_tours=None) -> Co
 
     for tour in range(1, max_tours + 1):
         reply = llm.chat(messages, schemas)
+        if reply.invalid_tool_call:
+            # Like a tool error: tell the model, let it try again (this tour still counts).
+            messages.append({"role": "system", "content": INVALID_TOOL_CALL_NOTE})
+            continue
         if not reply.tool_calls:
             return CoachResponse(reply=reply.text or FALLBACK_REPLY, tools_used=tools_used,
                                  pending_action=pending_action, turns=tour, aborted=False,
