@@ -1,0 +1,102 @@
+[
+  {
+    "section_index": 0,
+    "attempt_number": 1,
+    "file_name": "0_1.wav",
+    "result": {
+      "status": "scored",
+      "score": 0.8,
+      "verdict": "great",
+      "refusal_reason": null,
+      "message": "frozen",
+      "sub_scores": {
+        "timbre": 0.85,
+        "melody": 0.78,
+        "loudness": 0.8,
+        "rhythm": 0.74
+      },
+      "scorer": "frozen",
+      "latency_ms": 200.0
+    }
+  },
+  {
+    "section_index": 1,
+    "attempt_number": 1,
+    "file_name": "1_1.wav",
+    "result": {
+      "status": "scored",
+      "score": 0.45,
+      "verdict": "try_again",
+      "refusal_reason": null,
+      "message": "frozen",
+      "sub_scores": {
+        "timbre": 0.5,
+        "melody": 0.4,
+        "loudness": 0.48,
+        "rhythm": 0.42
+      },
+      "scorer": "frozen",
+      "latency_ms": 200.0
+    }
+  },
+  {
+    "section_index": 1,
+    "attempt_number": 2,
+    "file_name": "1_2.wav",
+    "result": {
+      "status": "scored",
+      "score": 0.7,
+      "verdict": "good",
+      "refusal_reason": null,
+      "message": "frozen",
+      "sub_scores": {
+        "timbre": 0.75,
+        "melody": 0.66,
+        "loudness": 0.7,
+        "rhythm": 0.68
+      },
+      "scorer": "frozen",
+      "latency_ms": 200.0
+    }
+  },
+  {
+    "section_index": 2,
+    "attempt_number": 1,
+    "file_name": "2_1.wav",
+    "result": {
+      "status": "scored",
+      "score": 0.35,
+      "verdict": "try_again",
+      "refusal_reason": null,
+      "message": "frozen",
+      "sub_scores": {
+        "timbre": 0.52,
+        "melody": 0.31,
+        "loudness": 0.3,
+        "rhythm": 0.2
+      },
+      "scorer": "frozen",
+      "latency_ms": 200.0
+    }
+  },
+  {
+    "section_index": 3,
+    "attempt_number": 1,
+    "file_name": "3_1.wav",
+    "result": {
+      "status": "scored",
+      "score": 0.63,
+      "verdict": "good",
+      "refusal_reason": null,
+      "message": "frozen",
+      "sub_scores": {
+        "timbre": 0.66,
+        "melody": 0.6,
+        "loudness": 0.65,
+        "rhythm": 0.58
+      },
+      "scorer": "frozen",
+      "latency_ms": 200.0
+    }
+  }
+]
