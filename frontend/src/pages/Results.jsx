@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getResult, getSession, mixUrl } from '../api.js'
+import CoachChat from '../components/CoachChat.jsx'
 
 const VERDICT_EMOJIS = { great: '🔥', good: '👍', try_again: '🔁' }
 
@@ -58,7 +59,7 @@ export default function Results() {
         ))}
       </div>
 
-      {/* Sprint 5: the coach chat goes here. */}
+      <CoachChat sessionId={sessionId} />
 
       <div className="actions">
         <Link to="/" className="button">Play again</Link>

@@ -18,6 +18,8 @@ export default function Play() {
   const audioRef = useRef(null)
   // The piece to start on, read from the address once, when the page opens.
   const [startSection] = useState(() => Number(searchParams.get('section')) || 0)
+  // ?retry=1: the player came from the coach to redo ONE piece, then goes back to the results.
+  const [isSingleRetry] = useState(() => searchParams.get('retry') === '1')
 
   // Load the session once (and again if the id in the address changes).
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function Play() {
   }
 
   function goNext() {
-    if (isLastSection) {
+    if (isLastSection || isSingleRetry) {
       navigate(`/results/${sessionId}`)
       return
     }
@@ -115,7 +117,9 @@ export default function Play() {
           <button className="secondary" onClick={() => dispatch({ type: 'retry' })}>🔁 Retry</button>
           {/* A refused recording keeps you on this piece: only Retry is offered. */}
           {wasScored && (
-            <button onClick={goNext}>{isLastSection ? '🏁 See my score' : 'Next ➜'}</button>
+            <button onClick={goNext}>
+              {isLastSection || isSingleRetry ? '🏁 See my score' : 'Next ➜'}
+            </button>
           )}
         </div>
       )}

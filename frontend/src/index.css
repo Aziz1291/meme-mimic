@@ -100,3 +100,20 @@ button:disabled { background: #bbb; color: white; cursor: not-allowed; }
 }
 .result-row:last-child { border-bottom: none; }
 audio { width: 100%; }
+
+/* Coach chat */
+.badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: normal;
+  border-radius: 6px;
+  background: #ffeaa7;
+  color: #6c5300;
+}
+.chat { max-height: 320px; overflow-y: auto; margin-bottom: 12px; }
+.bubble { padding: 8px 12px; border-radius: 10px; margin: 6px 0; max-width: 85%; }
+.bubble.user { background: #6c5ce7; color: white; margin-left: auto; }
+.bubble.assistant { background: #f1f0fa; }
+.chat-input { display: flex; gap: 8px; margin-top: 12px; }
+.chat-input input { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; }

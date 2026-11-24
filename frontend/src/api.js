@@ -103,7 +103,11 @@ export function mixUrl(sessionId) {
   return `/api/sessions/${sessionId}/mix`
 }
 
-// The coach chat comes in Sprint 5.
-export function askCoach() {
-  throw new Error('The coach is not ready yet.')
+// history = the earlier messages, [{ role: 'user' | 'assistant', content: '...' }].
+export function askCoach(sessionId, message, history) {
+  return request(`/api/sessions/${sessionId}/coach`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, history }),
+  })
 }
