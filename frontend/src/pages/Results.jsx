@@ -53,7 +53,9 @@ export default function Results() {
             <span>{session.sections[sectionResult.index].subtitle || `Piece ${sectionResult.index + 1}`}</span>
             <span>
               {VERDICT_EMOJIS[sectionResult.verdict]} {Math.round(sectionResult.best_score * 100)}%
-              <span className="hint"> · {sectionResult.attempt_count} tries</span>
+              <span className="hint">
+                {' · '}{sectionResult.attempt_count} {sectionResult.attempt_count === 1 ? 'try' : 'tries'}
+              </span>
             </span>
           </div>
         ))}
