@@ -21,6 +21,13 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
 LLM_MODEL = os.getenv("LLM_MODEL", "qwen/qwen3.8-27b")
 
+# --- The coach agent ---
+COACH_MAX_TOURS = 5  # model calls per question, at most (then a polite fallback)
+COACH_HISTORY_TURNS = 10  # only the last 10 chat messages are sent (cost, token limits)
+LLM_TEMPERATURE = 0.0  # always the same answer for the same question (reproducible)
+LLM_RETRIES = 2  # on a 429 "too many requests", retry twice...
+LLM_RETRY_WAIT_SECONDS = 2.0  # ...waiting a bit longer each time
+
 # --- Folders ---
 # backend/ is two levels above this file (backend/app/config.py).
 BACKEND_DIR = Path(__file__).resolve().parent.parent

@@ -138,3 +138,39 @@ class SessionResult(BaseModel):
     session_id: str
     total_percent: int = Field(ge=0, le=100)
     sections: list[SectionResult]
+
+
+# --- The coach (chat on the Results page) ---
+
+class ChatTurn(BaseModel):
+    """One earlier message of the chat, sent back by the browser.
+
+    Only "user" and "assistant": if the browser could send "system" messages,
+    anyone could rewrite the coach's rules from the browser.
+    """
+
+    role: Literal["user", "assistant"]
+    content: str = Field(max_length=2000)
+
+
+class CoachRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=500)
+    history: list[ChatTurn] = Field(default_factory=list, max_length=20)
+
+
+class PendingAction(BaseModel):
+    """An action the coach PROPOSES. Nothing happens until the player clicks to confirm."""
+
+    type: Literal["retry_section"]
+    section_index: int = Field(ge=0)
+
+
+class CoachResponse(BaseModel):
+    reply: str
+    tools_used: list[str]
+    pending_action: PendingAction | None = None
+    turns: int = Field(ge=0)
+    aborted: bool  # True when max_tours was reached without a final answer
+    provider: str  # "mock" or "groq": never hidden
+    model: str
+    degraded: bool = False  # True when "real" was asked but the mock had to answer
