@@ -1,0 +1,6 @@
+=== Latency of POST .../attempts (2026-11-24) ===
+machine : 13th Gen Intel(R) Core(TM) i7-13620H, 16 CPUs, 15.5 GB RAM, Python 3.12.16 (inside Docker: the numbers include it)
+meme    : emotional_damage, section 0 (1.48 s), scorer from config
+
+first call (cache + warm-up): 1427 ms
+next 20 calls: min 213 ms · median 226 ms · max 273 ms
