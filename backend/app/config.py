@@ -19,7 +19,9 @@ INFERENCE_MODE = os.getenv("INFERENCE_MODE", "mock").lower()
 # Secret: never print it, never return it in a response.
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
-LLM_MODEL = os.getenv("LLM_MODEL", "qwen/qwen3.8-27b")
+# Default chosen by measurement: same benchmark success as qwen, 4x faster, no invalid
+# tool calls (see eval/results/agent_comparison_2026-11-24.md).
+LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
 
 # --- The coach agent ---
 COACH_MAX_TOURS = 5  # model calls per question, at most (then a polite fallback)
