@@ -1,24 +1,25 @@
-// The whole app for now: one page that shows whether the backend is alive.
-// Sprint 3 replaces this with real pages (Home, Play, Results).
-import { useEffect, useState } from 'react'
-import { getHealth } from './api.js'
+// The app's pages and their addresses (routes).
+// The session id is in the address, so refreshing the page doesn't lose the game:
+// the page reloads the session from the backend.
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import Home from './pages/Home.jsx'
+import Play from './pages/Play.jsx'
+import Results from './pages/Results.jsx'
 
 export default function App() {
-  // What we show: "Checking…", then the backend status or an error message.
-  const [message, setMessage] = useState('Checking the backend…')
-
-  // useEffect runs after the page is drawn: the right moment to call the backend.
-  // The [] at the end means "only once, when the page opens".
-  useEffect(() => {
-    getHealth()
-      .then((health) => setMessage(`Backend: ${health.status} (${health.mode} mode)`))
-      .catch((error) => setMessage(error.message))
-  }, [])
-
   return (
-    <main>
-      <h1>Meme Mimic</h1>
-      <p>{message}</p>
-    </main>
+    <BrowserRouter>
+      <header className="top-bar">
+        <Link to="/" className="logo">🎤 Meme Mimic</Link>
+      </header>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/play/:sessionId" element={<Play />} />
+          <Route path="/results/:sessionId" element={<Results />} />
+          <Route path="*" element={<p>Page not found. <Link to="/">Go home</Link></p>} />
+        </Routes>
+      </main>
+    </BrowserRouter>
   )
 }
