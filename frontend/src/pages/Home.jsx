@@ -61,7 +61,9 @@ export default function Home() {
         {memes.map((meme) => (
           <div className="card" key={meme.meme_id}>
             <h2>{meme.title}</h2>
-            <p className="hint">{meme.section_count} pieces</p>
+            <p className="hint">
+              {meme.section_count} {meme.section_count === 1 ? 'piece' : 'pieces'}
+            </p>
             {/* Disabled while busy: an impatient double-click would create two games. */}
             <button
               disabled={isBusy}
