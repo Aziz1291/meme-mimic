@@ -1,0 +1,163 @@
+{
+  "examples": 28,
+  "correct": 19,
+  "accuracy": 0.6785714285714286,
+  "macro_f1": 0.536255858836504,
+  "per_class": {
+    "great": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 0,
+      "predicted": 0
+    },
+    "good": {
+      "precision": 1.0,
+      "recall": 0.2,
+      "f1": 0.33333333333333337,
+      "support": 10,
+      "predicted": 2
+    },
+    "try_again": {
+      "precision": 0.18181818181818182,
+      "recall": 1.0,
+      "f1": 0.3076923076923077,
+      "support": 2,
+      "predicted": 11
+    },
+    "refused": {
+      "precision": 1.0,
+      "recall": 0.9375,
+      "f1": 0.967741935483871,
+      "support": 16,
+      "predicted": 15
+    }
+  },
+  "confusion_matrix": {
+    "great": {
+      "great": 0,
+      "good": 0,
+      "try_again": 0,
+      "refused": 0
+    },
+    "good": {
+      "great": 0,
+      "good": 2,
+      "try_again": 8,
+      "refused": 0
+    },
+    "try_again": {
+      "great": 0,
+      "good": 0,
+      "try_again": 2,
+      "refused": 0
+    },
+    "refused": {
+      "great": 0,
+      "good": 0,
+      "try_again": 1,
+      "refused": 15
+    }
+  },
+  "scorer": "signal-no-melody",
+  "split": "test",
+  "config": {
+    "WEIGHTS": {
+      "timbre": 0.4,
+      "melody": 0.25,
+      "loudness": 0.2,
+      "rhythm": 0.15
+    },
+    "TIMBRE_COST_GOOD": 0.3,
+    "TIMBRE_COST_BAD": 0.76,
+    "MELODY_MAX_DIFF_SEMITONES": 6.0,
+    "LOUDNESS_MAX_DIFF": 0.5,
+    "T_GREAT": 0.75,
+    "T_GOOD": 0.5,
+    "SILENT_DB": -45.0,
+    "MIN_ATTEMPT_SECONDS": 0.3,
+    "CLIP_LEVEL": 0.99,
+    "MAX_CLIPPED_SHARE": 0.01,
+    "MIN_DYNAMIC_RANGE_DB": 10.0,
+    "MAX_LENGTH_FACTOR": 3.0,
+    "MAX_LENGTH_EXTRA_SECONDS": 1.0,
+    "N_MFCC": 13,
+    "MFCC_FIRST_COEFFICIENT": 0,
+    "HOP_LENGTH": 320,
+    "SAMPLE_RATE": 16000
+  },
+  "wrong": [
+    {
+      "file": "17481f3f_s0_a1.wav",
+      "human": "refused",
+      "app": "try_again",
+      "score": 0.3670486426982673,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "17481f3f_s1_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.39988233838276027,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "7ec0c630_s1_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.22736291710334042,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "7ec0c630_s1_a2.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.4559655708306885,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "9fd6662e_s0_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.270473614304195,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "9fd6662e_s1_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.3461279349521714,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "9fd6662e_s2_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.4739962381419305,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "9fd6662e_s3_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.39030195906818216,
+      "refusal_reason": null,
+      "hard_case": ""
+    },
+    {
+      "file": "9fd6662e_s4_a1.wav",
+      "human": "good",
+      "app": "try_again",
+      "score": 0.465800314346138,
+      "refusal_reason": null,
+      "hard_case": ""
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+=== Diagnosis: signal-v1 on test (2026-11-24) ===
+7 wrong out of 28
+
+  17481f3f_s0_a1.wav         human=refused    app=try_again  score=0.37  → rules
+  17481f3f_s1_a1.wav         human=good       app=try_again  score=0.42  → features:timbre
+  7ec0c630_s1_a1.wav         human=good       app=try_again  score=0.30  → features:timbre
+  9fd6662e_s0_a1.wav         human=good       app=try_again  score=0.30  → features:timbre
+  9fd6662e_s1_a1.wav         human=good       app=try_again  score=0.29  → features:timbre
+  9fd6662e_s2_a1.wav         human=good       app=try_again  score=0.36  → features:melody
+  9fd6662e_s3_a1.wav         human=good       app=try_again  score=0.40  → features:timbre
+
+Errors per stage:
+  features:timbre      5
+  rules                1
+  features:melody      1

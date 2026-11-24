@@ -1,0 +1,29 @@
+attempt_file,meme_id,section_index,label,split,hard_case,speaker,notes
+17481f3f_s0_a1.wav,phone_ringing,0,refused,test,,me,
+17481f3f_s1_a1.wav,phone_ringing,1,good,test,,me,
+17481f3f_s2_a1.wav,phone_ringing,2,refused,test,no_sound,me,
+17481f3f_s2_a2.wav,phone_ringing,2,good,test,,me,
+2c7535d6_s0_a1.wav,emotional_damage,0,try_again,test,,me,
+2c7535d6_s1_a1.wav,emotional_damage,1,try_again,test,,me,
+7ec0c630_s0_a1.wav,emotional_damage,0,refused,test,no_sound,me,
+7ec0c630_s0_a2.wav,emotional_damage,0,refused,test,no_sound,me,
+7ec0c630_s0_a3.wav,emotional_damage,0,good,test,,me,
+7ec0c630_s1_a1.wav,emotional_damage,1,good,test,,me,
+7ec0c630_s1_a2.wav,emotional_damage,1,good,test,,me,
+9fd6662e_s0_a1.wav,why_are_you_running,0,good,test,,me,
+9fd6662e_s1_a1.wav,why_are_you_running,1,good,test,,me,
+9fd6662e_s2_a1.wav,why_are_you_running,2,good,test,,me,
+9fd6662e_s3_a1.wav,why_are_you_running,3,good,test,,me,
+9fd6662e_s4_a1.wav,why_are_you_running,4,good,test,,me,
+17481f3f_s1_a1silent.wav,phone_ringing,1,refused,test,synthetic_silent,synthetic,made from 17481f3f_s1_a1.wav
+17481f3f_s2_a2distorted.wav,phone_ringing,2,refused,test,synthetic_distorted,synthetic,made from 17481f3f_s2_a2.wav
+2c7535d6_s0_a1short.wav,emotional_damage,0,refused,test,synthetic_short,synthetic,made from 2c7535d6_s0_a1.wav
+2c7535d6_s1_a1noisy.wav,emotional_damage,1,refused,test,synthetic_noisy,synthetic,made from 2c7535d6_s1_a1.wav
+7ec0c630_s0_a3long.wav,emotional_damage,0,refused,test,synthetic_long,synthetic,made from 7ec0c630_s0_a3.wav
+7ec0c630_s1_a1silent.wav,emotional_damage,1,refused,test,synthetic_silent,synthetic,made from 7ec0c630_s1_a1.wav
+7ec0c630_s1_a2distorted.wav,emotional_damage,1,refused,test,synthetic_distorted,synthetic,made from 7ec0c630_s1_a2.wav
+9fd6662e_s0_a1short.wav,why_are_you_running,0,refused,test,synthetic_short,synthetic,made from 9fd6662e_s0_a1.wav
+9fd6662e_s1_a1noisy.wav,why_are_you_running,1,refused,test,synthetic_noisy,synthetic,made from 9fd6662e_s1_a1.wav
+9fd6662e_s2_a1long.wav,why_are_you_running,2,refused,test,synthetic_long,synthetic,made from 9fd6662e_s2_a1.wav
+9fd6662e_s3_a1silent.wav,why_are_you_running,3,refused,test,synthetic_silent,synthetic,made from 9fd6662e_s3_a1.wav
+9fd6662e_s4_a1distorted.wav,why_are_you_running,4,refused,test,synthetic_distorted,synthetic,made from 9fd6662e_s4_a1.wav

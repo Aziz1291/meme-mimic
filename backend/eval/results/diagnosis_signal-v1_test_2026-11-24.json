@@ -1,0 +1,10 @@
+{
+  "scorer": "signal-v1",
+  "wrong": 7,
+  "total": 28,
+  "stages": {
+    "rules": 1,
+    "features:timbre": 5,
+    "features:melody": 1
+  }
+}
