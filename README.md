@@ -95,13 +95,13 @@ All scripts run inside Docker and save their output (`.txt` + `.json`) in `backe
 | … final evaluation on the test set | `docker compose run --rm api python -m eval.evaluate_scoring signal-v1` (and `signal-no-melody`) |
 | … which stage failed | `docker compose run --rm api python -m eval.diagnose signal-v1` |
 
-## Results (so far)
+## Results
 
 | Measurement | Result |
 |---|---|
 | **Coach, 2 models × 2 runs** | `gpt-oss-20b`: 20/20 and 20/20 · `qwen3.8-27b`: 20/20 and 20/20. **0 unrequested actions.** No measurable difference on success (the benchmark is saturated), but gpt-oss is about 4× faster (median ≈ 640 ms vs ≈ 2 700 ms), and qwen sometimes writes invalid tool names. Details: `eval/results/agent_comparison_2026-11-24.md`. |
 | **Attempt latency** (i7-13620H, Docker) | first call 1.4 s (feature cache + warm-up), then min 213 · median 226 · max 273 ms |
-| **Scoring vs humans** (macro-F1, refusals, `signal-v1` vs `signal-no-melody`) | *Pending: the recordings and blind labels are being collected.* |
+| **Scoring vs humans** (test set: 16 human attempts labeled blind + 12 synthetic refusals) | `signal-v1`: **21/28 correct, macro-F1 0.634**, refusal precision 1.00 / recall 0.94. `signal-no-melody`: 19/28 (gap 2 examples = no measurable difference). Main error: **too harsh**, 6 of 10 "good" attempts scored under the 0.50 threshold, mostly because of timbre. The ranking is right (every "good" scored above every "try_again"), the cut-off isn't. Details: `eval/results/scoring_summary_2026-11-24.md`. |
 
 ## Architecture
 
@@ -131,8 +131,9 @@ frontend/src/  api.js (every fetch) · pages/ (Home, Play + gameReducer, Results
 ## Limitations
 
 - **Signal similarity ≠ human judgment.** The score compares the sound (timbre, melody, loudness, rhythm), not how funny or well acted an imitation is.
-- **Timbre is sensitive to the voice's pitch:** in a test, a section shifted 5 semitones lower scored as badly as an unrelated meme. Melody uses relative pitch, but timbre doesn't. Being measured on real voices.
-- **Few speakers:** the scoring evaluation uses the voices we could collect; results only hold for voices like those.
+- **Timbre is sensitive to the voice's pitch:** a section shifted 5 semitones lower scored as badly as an unrelated meme, and on real attempts timbre caused 5 of the 7 scoring errors. Melody uses relative pitch, but timbre doesn't.
+- **The verdict thresholds were not tuned** (no dev set): on the test data, `T_GOOD = 0.50` is too high. Next step: a dev set with other voices.
+- **Small test set:** 16 human attempts from 1 speaker + 12 synthetic refusals. The rules check signal quality, not content (a clean non-imitation passes).
 - **The noise rule** refuses recordings with no quiet moment at all (continuous sound): watch for false "too noisy" refusals.
 - **Single-player storage:** sessions are files on disk. Writes are atomic, but two attempts sent at the exact same moment for one session could lose one.
 - **The coach benchmark is saturated** (both models 20/20): it proves correct behavior, but it can't rank the models on quality.
