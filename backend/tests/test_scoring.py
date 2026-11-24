@@ -64,6 +64,14 @@ def test_missing_melody_shares_its_weight():
     assert scoring.weighted_score(sub_scores) == pytest.approx(1.0)
 
 
+def test_verdict_matches_the_rounded_score(monkeypatch):
+    # A raw 0.4996 is shown as 50%: it must also be judged "good", not "try again".
+    monkeypatch.setattr(scoring, "weighted_score", lambda sub_scores, use_melody=True: 0.4996)
+    original = features.extract(make_chirp(1.0, 200, 300), SAMPLE_RATE)
+    score, _, verdict = scoring.score(original, original)
+    assert score == 0.5 and verdict == Verdict.good
+
+
 def test_verdict_thresholds():
     assert scoring.verdict_for(0.9) == Verdict.great
     assert scoring.verdict_for(0.6) == Verdict.good

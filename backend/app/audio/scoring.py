@@ -94,4 +94,8 @@ def score(original: dict, attempt: dict, use_melody=True):
     # A NaN would break JSON and means a bug upstream: never let it reach the player.
     if not math.isfinite(final_score):
         raise ValueError("score is not a finite number")
+    # Round ONCE, before choosing the verdict. Bug found while taking the screenshots:
+    # 0.4996 was shown as "50%" but judged "try again" (below 0.50). Now the % the player
+    # sees and the verdict always agree.
+    final_score = round(final_score, 3)
     return final_score, sub_scores, verdict_for(final_score)
