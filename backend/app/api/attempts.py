@@ -67,8 +67,11 @@ def build_response(samples, sample_rate, section, section_path, started) -> Atte
         logger.error("scoring failed: %s", error)
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, "Scoring failed. Try again.")
     latency_ms = (time.perf_counter() - started) * 1000
+    # Round once, and use that same number everywhere, so the % in the message and the
+    # % the page computes from "score" can never disagree (0.9349 vs 0.935).
+    score = round(score, 3)
     message = VERDICT_MESSAGES[verdict].format(percent=round(score * 100))
-    return AttemptResponse(status="scored", score=round(score, 3), verdict=verdict,
+    return AttemptResponse(status="scored", score=score, verdict=verdict,
                            message=message, sub_scores=sub_scores, scorer=scorer.name,
                            latency_ms=latency_ms)
 
