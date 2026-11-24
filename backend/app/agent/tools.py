@@ -32,7 +32,9 @@ def get_session_summary(game: dict) -> dict:
         return {"error": "no scored attempt yet"}
     best_percents = [best_try(section)["percent"] for section in played]
     best = max(played, key=lambda section: best_try(section)["percent"])
-    worst = min(played, key=lambda section: best_try(section)["percent"])
+    # Searched from the end: on a tie, max() and min() both keep the FIRST match, which
+    # would name the same piece "best" and "worst". Reversed, the worst is another piece.
+    worst = min(reversed(played), key=lambda section: best_try(section)["percent"])
     return {"meme": game["meme_title"], "section_count": len(game["sections"]),
             "total_percent": round(sum(best_percents) / len(best_percents)),
             "best": {"section_number": best["section_number"], "percent": best_try(best)["percent"]},

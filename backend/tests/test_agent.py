@@ -80,6 +80,15 @@ def test_out_of_range_and_extra_arguments():
     assert execute_tool("get_section_scores", extra, make_game()) == {"error": "invalid arguments"}
 
 
+def test_tie_gives_different_best_and_worst_pieces():
+    game = {"meme_title": "Tie", "sections": [
+        {"section_number": 1, "subtitle": None, "tries": [attempt(90)]},
+        {"section_number": 2, "subtitle": None, "tries": [attempt(90)]},
+    ]}
+    summary = execute_tool("get_session_summary", "{}", game)
+    assert summary["best"]["section_number"] != summary["worst"]["section_number"]
+
+
 def test_tools_read_the_right_numbers():
     game = make_game()
     summary = execute_tool("get_session_summary", "{}", game)
