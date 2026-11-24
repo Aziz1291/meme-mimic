@@ -1,0 +1,104 @@
+<!doctype html>
+<!--
+  Blind labeling page: plays each original piece next to the attempt, with 4 buttons.
+  It never shows a score (it doesn't know any), so the human label stays independent.
+  Serve the backend/eval folder, e.g.  python -m http.server 8765  (inside backend/eval),
+  then open http://localhost:8765/label.html. Answers are kept in this browser
+  (localStorage) and in window.labels, from where they are written to labels.csv.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Label attempts</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f6f5fb; margin: 0; padding: 16px; }
+  main { max-width: 760px; margin: 0 auto; }
+  .row { background: white; border-radius: 12px; padding: 14px; margin: 12px 0;
+         box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .row.done { border-left: 6px solid #00b894; }
+  .players { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  audio { width: 100%; }
+  .buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  button { padding: 10px 14px; font-size: 15px; border: 2px solid #6c5ce7; border-radius: 8px;
+           background: white; color: #6c5ce7; cursor: pointer; }
+  button.chosen { background: #6c5ce7; color: white; }
+  .hint { color: #666; font-size: 14px; }
+  .progress { position: sticky; top: 0; background: #2d2a4a; color: white; padding: 10px 14px;
+              border-radius: 10px; font-weight: bold; }
+  input { padding: 6px; font-size: 14px; width: 260px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="progress" id="progress">Loading…</div>
+  <p class="hint">
+    Listen to the <b>original</b>, then <b>the attempt</b>, then click a label.
+    <b>great</b> = a friend would recognize it instantly ·
+    <b>good</b> = recognizable but clearly different ·
+    <b>try_again</b> = not recognizable ·
+    <b>refused</b> = can't judge (silence, noise, distortion, cut).
+  </p>
+  <div id="rows"></div>
+</main>
+<script>
+const LABELS = ['great', 'good', 'try_again', 'refused']
+window.labels = {}  // attempt_file → { label, hard_case }
+try { window.labels = JSON.parse(localStorage.getItem('labels') || '{}') } catch {}
+
+function save() {
+  try { localStorage.setItem('labels', JSON.stringify(window.labels)) } catch {}
+  const total = document.querySelectorAll('.row').length
+  const done = Object.values(window.labels).filter((entry) => entry.label).length
+  document.getElementById('progress').textContent =
+    done === total ? `✅ All ${total} labeled. Tell the AI "labeled".` : `${done} / ${total} labeled`
+}
+
+function originalFor(attemptFile) {
+  return attemptFile.slice(0, attemptFile.lastIndexOf('_a')) + '_original.wav'
+}
+
+function addRow(attemptFile, position) {
+  const entry = window.labels[attemptFile] || { label: '', hard_case: '' }
+  window.labels[attemptFile] = entry
+  const row = document.createElement('div')
+  row.className = 'row' + (entry.label ? ' done' : '')
+  row.innerHTML = `
+    <b>#${position + 1}</b> <span class="hint">${attemptFile}</span>
+    <div class="players">
+      <div><span class="hint">Original</span><audio controls preload="none" src="dataset/${originalFor(attemptFile)}"></audio></div>
+      <div><span class="hint">Attempt</span><audio controls preload="none" src="dataset/${attemptFile}"></audio></div>
+    </div>
+    <div class="buttons"></div>
+    <p class="hint">Special case? (optional, e.g. whisper, too_fast, flat, wrong_words)
+      <input placeholder="leave empty if normal" value="${entry.hard_case}"></p>`
+  const buttons = row.querySelector('.buttons')
+  for (const label of LABELS) {
+    const button = document.createElement('button')
+    button.textContent = label
+    if (entry.label === label) button.classList.add('chosen')
+    button.onclick = () => {
+      entry.label = label
+      buttons.querySelectorAll('button').forEach((other) => other.classList.remove('chosen'))
+      button.classList.add('chosen')
+      row.classList.add('done')
+      save()
+    }
+    buttons.appendChild(button)
+  }
+  row.querySelector('input').oninput = (event) => { entry.hard_case = event.target.value.trim(); save() }
+  document.getElementById('rows').appendChild(row)
+}
+
+fetch('labels.csv').then((response) => response.text()).then((text) => {
+  const lines = text.trim().split(/\r?\n/).slice(1)
+  lines.forEach((line, position) => {
+    const attemptFile = line.split(',')[0]
+    if (!attemptFile.match(/_a\d+\.wav$/)) return  // human attempts only
+    addRow(attemptFile, position)
+  })
+  save()
+})
+</script>
+</body>
+</html>
