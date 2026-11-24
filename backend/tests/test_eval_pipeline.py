@@ -65,6 +65,26 @@ def test_export_copies_attempts_and_originals():
     assert export_all() == 0  # running it again adds nothing
 
 
+def test_synthetic_refusals_are_all_refused_by_the_rules():
+    from eval.common import predict
+    from eval.make_synthetic import make_all
+    from app.providers.scorers import MockScorer
+
+    play_and_label()
+    rows = common.load_labels()
+    for row in rows:  # like a human who labeled but didn't split
+        row["split"] = ""
+    common.save_labels(rows)
+    assert make_all() == 12
+    assert make_all() == 0  # running it twice adds nothing
+    rows = common.load_labels()
+    assert all(row["split"] == "test" for row in rows)
+    synthetic = [row for row in rows if row["speaker"] == "synthetic"]
+    assert all("a3" not in row["attempt_file"] for row in synthetic)  # attempt 3 = silence
+    for row in synthetic:  # every damage must really be caught by a rule
+        assert predict(row, MockScorer())["prediction"] == "refused", row["attempt_file"]
+
+
 def test_evaluate_diagnose_calibrate_run_and_save():
     play_and_label()
     text = evaluate("signal-v1")
