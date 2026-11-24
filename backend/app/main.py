@@ -8,7 +8,7 @@ import logging
 
 from fastapi import FastAPI
 
-from app.api import attempts, health, memes, sessions
+from app.api import attempts, coach, health, memes, sessions
 
 # Show our own log messages (ffmpeg problems, broken memes) in the docker logs.
 logging.basicConfig(level=logging.INFO)
@@ -24,3 +24,4 @@ app.include_router(health.router)
 app.include_router(memes.router)
 app.include_router(sessions.router)
 app.include_router(attempts.router)
+app.include_router(coach.router)
