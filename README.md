@@ -36,13 +36,16 @@ cd ..
 
 ### Meme audio
 
-The meme clips are **not in the repo** (copyright). `backend/data/memes/catalog.json` lists them. Download the 3 files from myinstants.com into `backend/data/memes/`:
+The meme clips are **not in the repo** (copyright). `backend/data/memes/catalog.json` lists them. Download the 6 files from myinstants.com into `backend/data/memes/`. The last 3 use a normal speaking voice, so they're the easiest to imitate:
 
 ```powershell
 cd backend/data/memes
 curl.exe -L -o emotional_damage.mp3 https://www.myinstants.com/media/sounds/emotional-damage-steven-he.mp3
 curl.exe -L -o why_are_you_running.mp3 https://www.myinstants.com/media/sounds/why-are.mp3
 curl.exe -L -o phone_ringing.mp3 https://www.myinstants.com/media/sounds/yo-phone-is-ringing-your-phone-was-ringing.mp3
+curl.exe -L -o hello_there.mp3 https://www.myinstants.com/media/sounds/obi-wan-hello-there.mp3
+curl.exe -L -o what_da_dog_doin.mp3 https://www.myinstants.com/media/sounds/what-da-dog-doin_J2jVnct.mp3
+curl.exe -L -o i_dont_care.mp3 https://www.myinstants.com/media/sounds/i-dont-care-still-dont-care.mp3
 cd ../../..
 ```
 
