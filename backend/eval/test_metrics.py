@@ -30,9 +30,10 @@ def test_small_example_computed_by_hand():
     assert per_class["great"]["f1"] == pytest.approx(2 / 3)
     # good: TP=1, FP=2, FN=0 → precision 1/3, recall 1, F1 = 2*(1/3)*1/(4/3) = 0.5
     assert per_class["good"]["f1"] == pytest.approx(0.5)
-    # try_again: TP=0 → F1 0. refused: absent and never predicted → F1 0.
-    # macro-F1 = (0.667 + 0.5 + 0 + 0) / 4 = 0.292
-    assert macro_f1(per_class) == pytest.approx((2 / 3 + 0.5) / 4)
+    # try_again: present but never found → F1 0, it counts.
+    # refused: absent AND never predicted → left out of the average.
+    # macro-F1 = (0.667 + 0.5 + 0) / 3 = 0.389
+    assert macro_f1(per_class) == pytest.approx((2 / 3 + 0.5) / 3)
     assert accuracy(truths, predictions) == 0.5
 
 
@@ -47,3 +48,9 @@ def test_report_has_the_numbers():
     text, numbers = report("demo", ["great", "good"], ["great", "great"])
     assert "macro-F1" in text
     assert numbers["correct"] == 1
+
+
+def test_missing_class_does_not_lower_macro_f1():
+    # Perfect predictions, but no "good" example at all: macro-F1 must still be 1.0.
+    labels = ["great", "try_again", "refused"]
+    assert macro_f1(scores_per_class(labels, labels)) == 1.0

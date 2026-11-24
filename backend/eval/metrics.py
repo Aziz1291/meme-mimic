@@ -27,13 +27,25 @@ def scores_per_class(truths, predictions, classes=CLASSES):
         recall = true_positives / real_count if real_count else 0.0
         both = precision + recall
         f1 = 2 * precision * recall / both if both else 0.0
-        result[name] = {"precision": precision, "recall": recall, "f1": f1, "support": real_count}
+        result[name] = {"precision": precision, "recall": recall, "f1": f1,
+                        "support": real_count, "predicted": predicted_count}
     return result
 
 
 def macro_f1(per_class):
-    """The average F1 of the classes: each class counts the same, even a rare one."""
-    return sum(scores["f1"] for scores in per_class.values()) / len(per_class)
+    """The average F1 of the classes: each class counts the same, even a rare one.
+
+    A class that is in neither the human labels nor the predictions is left out:
+    its F1 would be 0 "by default" and pull the average down for no reason
+    (same rule as scikit-learn).
+    """
+    present = []
+    for scores in per_class.values():
+        if scores["support"] > 0 or scores["predicted"] > 0:
+            present.append(scores["f1"])
+    if not present:
+        return 0.0
+    return sum(present) / len(present)
 
 
 def confusion_matrix(truths, predictions, classes=CLASSES):

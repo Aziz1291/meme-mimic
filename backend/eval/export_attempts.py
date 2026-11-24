@@ -13,9 +13,7 @@ import shutil
 from pathlib import Path
 
 from app import config
-from eval.common import DATASET_DIR, load_labels, save_labels
-
-STORAGE_DIR = Path(config.STORAGE_DIR)
+from eval import common
 
 
 def meme_id_for(title: str) -> str:
@@ -49,20 +47,21 @@ def export_session(session_folder: Path, known_files: set, dataset_dir: Path) ->
     return new_rows
 
 
-def export_all(storage_dir=STORAGE_DIR, dataset_dir=DATASET_DIR) -> int:
-    dataset_dir = Path(dataset_dir)
+def export_all() -> int:
+    storage_dir = Path(config.STORAGE_DIR)
+    dataset_dir = Path(common.DATASET_DIR)
     dataset_dir.mkdir(parents=True, exist_ok=True)
-    rows = load_labels()
+    rows = common.load_labels()
     known_files = {row["attempt_file"] for row in rows}
     added = 0
     for session_folder in sorted(Path(storage_dir).iterdir()):
         new_rows = export_session(session_folder, known_files, dataset_dir)
         rows += new_rows
         added += len(new_rows)
-    save_labels(rows)
+    common.save_labels(rows)
     return added
 
 
 if __name__ == "__main__":
     count = export_all()
-    print(f"Exported {count} new attempts to {DATASET_DIR}. Label them in eval/labels.csv.")
+    print(f"Exported {count} new attempts to {common.DATASET_DIR}. Label them in eval/labels.csv.")

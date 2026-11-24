@@ -50,7 +50,8 @@ class MockScorer:
 
 
 def get_scorer(name: str):
-    if name == "signal":
+    # "signal" in config, "signal-v1" in the evaluation reports: the same scorer.
+    if name == "signal" or name == "signal-v1":
         return SignalScorer()
     if name == "signal-no-melody":
         return SignalScorer(use_melody=False)
