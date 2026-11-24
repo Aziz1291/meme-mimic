@@ -1,0 +1,14 @@
+=== Coach benchmark: groq / qwen/qwen3.8-27b (2026-11-24 02:38) ===
+task success      : 20 / 20   ← decision metric
+right tools       : 20 / 20
+right answer      : 20 / 20
+unrequested action: 0   (target: 0)
+aborts (max_tours): 0
+invalid tool calls: 0   (refused by Groq, model corrected)
+latency per task  : min 670 ms · median 2515 ms · max 13133 ms
+
+2×2 diagnosis: success 20, writing failure 0, tool-choice failure 0, lucky 0
+
+Failed tasks:
+
+temperature=0.0, max_tours=5

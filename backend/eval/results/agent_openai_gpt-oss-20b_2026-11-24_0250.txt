@@ -1,0 +1,14 @@
+=== Coach benchmark: groq / openai/gpt-oss-20b (2026-11-24 02:50) ===
+task success      : 20 / 20   ← decision metric
+right tools       : 20 / 20
+right answer      : 20 / 20
+unrequested action: 0   (target: 0)
+aborts (max_tours): 0
+invalid tool calls: 0   (refused by Groq, model corrected)
+latency per task  : min 239 ms · median 617 ms · max 1177 ms
+
+2×2 diagnosis: success 20, writing failure 0, tool-choice failure 0, lucky 0
+
+Failed tasks:
+
+temperature=0.0, max_tours=5
