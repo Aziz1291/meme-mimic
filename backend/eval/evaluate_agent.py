@@ -23,9 +23,9 @@ from datetime import datetime
 from app import config
 from app.agent.game_data import build_game
 from app.agent.loop import run_agent
-from app.providers.llm import GroqLLM
+from app.providers.llm import GroqLLM, LLMUnavailable
 from app.providers.mock_llm import MockLLM
-from app.schemas import AttemptRecord, SessionResponse
+from app.schemas import AttemptRecord, CoachResponse, SessionResponse
 from eval.common import EVAL_DIR, save_result
 
 FIXTURE_DIR = EVAL_DIR / "fixtures" / "demo_session"
@@ -73,18 +73,46 @@ def make_llm(model: str):
     return GroqLLM(config.GROQ_API_KEY, model)
 
 
+class CountingLLM:
+    """Wraps a model to count its invalid tool calls (a measured weakness, see the notes)."""
+
+    def __init__(self, llm):
+        self.llm = llm
+        self.name = llm.name
+        self.model = llm.model
+        self.invalid_tool_calls = 0
+
+    def chat(self, messages, tools):
+        reply = self.llm.chat(messages, tools)
+        if reply.invalid_tool_call:
+            self.invalid_tool_calls += 1
+        return reply
+
+
+def failed_response(message: str) -> CoachResponse:
+    """What we record when the model couldn't answer at all (the app would answer 503)."""
+    return CoachResponse(reply=message, tools_used=[], turns=0, aborted=True,
+                         provider="error", model="error")
+
+
 def run_tasks(llm, game: dict, pause: float) -> list[dict]:
     with open(TASKS_PATH, newline="", encoding="utf-8") as file:
         tasks = list(csv.DictReader(file))
     results = []
     for task in tasks:
         started = time.perf_counter()
-        response = run_agent(task["message"], [], game, llm)
+        before = llm.invalid_tool_calls
+        try:
+            response = run_agent(task["message"], [], game, llm)
+        except LLMUnavailable:
+            # One failed task, not a crashed benchmark.
+            response = failed_response("(error: model unavailable)")
         latency_ms = (time.perf_counter() - started) * 1000
         result = judge(task, response)
         result.update({"id": task["id"], "category": task["category"], "message": task["message"],
                        "tools_used": response.tools_used, "reply": response.reply,
-                       "aborted": response.aborted, "latency_ms": latency_ms})
+                       "aborted": response.aborted, "latency_ms": latency_ms,
+                       "invalid_tool_calls": llm.invalid_tool_calls - before})
         result["cell"] = cell_2x2(result)
         results.append(result)
         time.sleep(pause)
@@ -92,7 +120,7 @@ def run_tasks(llm, game: dict, pause: float) -> list[dict]:
 
 
 def evaluate(model: str) -> str:
-    llm = make_llm(model)
+    llm = CountingLLM(make_llm(model))
     pause = 0 if model == "mock" else PAUSE_SECONDS
     results = run_tasks(llm, load_frozen_game(), pause)
     successes = sum(1 for result in results if result["success"])
@@ -105,6 +133,7 @@ def evaluate(model: str) -> str:
              f"right answer      : {sum(r['right_answer'] for r in results)} / {len(results)}",
              f"unrequested action: {sum(r['unrequested_action'] for r in results)}   (target: 0)",
              f"aborts (max_tours): {sum(r['aborted'] for r in results)}",
+             f"invalid tool calls: {llm.invalid_tool_calls}   (refused by Groq, model corrected)",
              f"latency per task  : min {min(latencies):.0f} ms · median "
              f"{statistics.median(latencies):.0f} ms · max {max(latencies):.0f} ms",
              "", "2×2 diagnosis: " + ", ".join(f"{name} {count}" for name, count in cells.items()),
@@ -119,7 +148,8 @@ def evaluate(model: str) -> str:
     safe_model = llm.model.replace("/", "_")
     save_result(f"agent_{safe_model}_{datetime.now():%Y-%m-%d_%H%M}", text,
                 {"provider": llm.name, "model": llm.model, "successes": successes,
-                 "total": len(results), "cells": cells, "results": results})
+                 "total": len(results), "cells": cells,
+                 "invalid_tool_calls": llm.invalid_tool_calls, "results": results})
     return text
 
 
